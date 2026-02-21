@@ -1,0 +1,73 @@
+   Compiling logger v0.1.0 (/workspaces/Tour/logger)
+error[E0432]: unresolved import `windows_sys::Win32::System::DataExchange::CF_UNICODETEXT`
+  --> src/main.rs:18:54
+   |
+18 |     OpenClipboard, CloseClipboard, GetClipboardData, CF_UNICODETEXT,
+   |                                                      ^^^^^^^^^^^^^^ no `CF_UNICODETEXT` in `Win32::System::DataExchange`
+
+error[E0432]: unresolved imports `windows_sys::Win32::System::SystemInformation::GetLastInputInfo`, `windows_sys::Win32::System::SystemInformation::LASTINPUTINFO`
+  --> src/main.rs:22:81
+   |
+22 | use windows_sys::Win32::System::SystemInformation::{GetLocalTime, GetTickCount, GetLastInputInfo, LASTINPUTINFO};
+   |                                                                                 ^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^ no `LASTINPUTINFO` in `Win32::System::SystemInformation`
+   |                                                                                 |
+   |                                                                                 no `GetLastInputInfo` in `Win32::System::SystemInformation`
+
+warning: unused import: `BOOL`
+ --> src/main.rs:9:81
+  |
+9 | use windows_sys::Win32::Foundation::{LPARAM, LRESULT, WPARAM, SYSTEMTIME, HWND, BOOL};
+  |                                                                                 ^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+error[E0308]: mismatched types
+  --> src/main.rs:30:33
+   |
+30 | static mut HOOK_HANDLE: HHOOK = 0;
+   |                                 ^ expected `*mut c_void`, found `usize`
+   |
+   = note: expected raw pointer `*mut c_void`
+                     found type `usize`
+help: if you meant to create a null pointer, use `std::ptr::null_mut()`
+   |
+30 - static mut HOOK_HANDLE: HHOOK = 0;
+30 + static mut HOOK_HANDLE: HHOOK = std::ptr::null_mut();
+   |
+
+error[E0308]: mismatched types
+  --> src/main.rs:66:22
+   |
+66 |         if handle == 0 {
+   |            ------    ^ expected `*mut c_void`, found `usize`
+   |            |
+   |            expected because this is `*mut c_void`
+   |
+   = note: expected raw pointer `*mut c_void`
+                     found type `usize`
+help: if you meant to create a null pointer, use `std::ptr::null_mut()`
+   |
+66 -         if handle == 0 {
+66 +         if handle == std::ptr::null_mut() {
+   |
+
+error[E0308]: mismatched types
+   --> src/main.rs:221:20
+    |
+221 |         if hook != 0 {
+    |            ----    ^ expected `*mut c_void`, found `usize`
+    |            |
+    |            expected because this is `*mut c_void`
+    |
+    = note: expected raw pointer `*mut c_void`
+                      found type `usize`
+help: if you meant to create a null pointer, use `std::ptr::null_mut()`
+    |
+221 -         if hook != 0 {
+221 +         if hook != std::ptr::null_mut() {
+    |
+
+Some errors have detailed explanations: E0308, E0432.
+For more information about an error, try `rustc --explain E0308`.
+warning: `logger` (bin "logger") generated 1 warning
+error: could not compile `logger` (bin "logger") due to 5 previous errors; 1 warning emitted
