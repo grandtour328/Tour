@@ -6,8 +6,11 @@ use windows::{
 
 fn main() -> Result<()> {
     unsafe {
-        // COM inicializálása
-        CoInitializeEx(None, COINIT_APARTMENTTHREADED)?;
+        // COM inicializálása – HRESULT-et ad vissza, ezért nem használható rajta a ?
+        let hr = CoInitializeEx(None, COINIT_APARTMENTTHREADED);
+        if hr.is_err() {
+            println!("COM inicializálási hiba: {:?}", hr);
+        }
 
         // UI Automation objektum létrehozása
         let uia: IUIAutomation = CoCreateInstance(
@@ -26,9 +29,11 @@ fn main() -> Result<()> {
         let value_pattern: IUIAutomationValuePattern =
             element.GetCurrentPatternAs(UIA_ValuePatternId)?;
 
-        // Érték lekérése
+        // Érték lekérése (BSTR → String)
         let value = value_pattern.CurrentValue()?;
-        println!("Elem értéke: {}", value.to_string_lossy());
+        let value_str = value.to_string();
+
+        println!("Elem értéke: {}", value_str);
 
         Ok(())
     }
