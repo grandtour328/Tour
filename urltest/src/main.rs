@@ -1,25 +1,33 @@
 use windows::{
     core::*,
+    Win32::System::Com::*,
     Win32::UI::Accessibility::*,
-    Win32::Foundation::*,
 };
 
 fn main() -> Result<()> {
     unsafe {
-        // UI Automation inicializálása
-        let uia: IUIAutomation = CoCreateInstance(&CUIAutomation, None, CLSCTX_INPROC_SERVER)?;
+        // COM inicializálása
+        CoInitializeEx(None, COINIT_APARTMENTTHREADED)?;
+
+        // UI Automation objektum létrehozása
+        let uia: IUIAutomation = CoCreateInstance(
+            &CUIAutomation,
+            None,
+            CLSCTX_INPROC_SERVER,
+        )?;
+
+        println!("UI Automation inicializálva.");
 
         // Fókuszált elem lekérése
         let element = uia.GetFocusedElement()?;
-
         println!("Fókuszált elem megvan.");
 
-        // A ValuePattern lekérése
-        let value_pattern: IUIAutomationValuePattern = element.GetCurrentPatternAs(UIA_ValuePatternId)?;
+        // ValuePattern lekérése
+        let value_pattern: IUIAutomationValuePattern =
+            element.GetCurrentPatternAs(UIA_ValuePatternId)?;
 
-        // Az aktuális érték lekérése
+        // Érték lekérése
         let value = value_pattern.CurrentValue()?;
-
         println!("Elem értéke: {}", value.to_string_lossy());
 
         Ok(())
