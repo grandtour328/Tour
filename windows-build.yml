@@ -1,0 +1,28 @@
+name: Windows Rust Build (urltest)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Rust stable
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Build urltest project
+      run: cd urltest && cargo build --release
+
+    - name: Upload EXE artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: urltest-windows-exe
+        path: urltest/target/release/*.exe
